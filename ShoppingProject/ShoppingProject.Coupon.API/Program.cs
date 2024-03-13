@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ShoppingProject.Coupon.API.Interfaces;
+using ShoppingProject.Coupon.API.Services;
 using ShoppingProject.Coupon.Database.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,4 +61,6 @@ void ConfigureServices(IServiceCollection services)
     {
         option.UseSqlServer(builder.Configuration.GetConnectionString("CouponDbContextSql"));
     });
+
+    builder.Services.TryAddScoped<ICouponService, CouponService>();
 }
