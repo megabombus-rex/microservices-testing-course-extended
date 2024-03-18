@@ -1,4 +1,6 @@
-﻿using ShoppingProject.Coupon.API.Interfaces;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ShoppingProject.Coupon.API.Interfaces;
 using ShoppingProject.Coupon.API.Models.Dtos;
 using ShoppingProject.Coupon.Database.Contexts;
 using ShoppingProject.Coupon.Database.Entities;
@@ -8,10 +10,12 @@ namespace ShoppingProject.Coupon.API.Services
     public class CouponService : ICouponService
     {
         private readonly CouponDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CouponService(CouponDbContext dbContext)
+        public CouponService(CouponDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public CouponDto GetById(Guid id)
@@ -26,10 +30,7 @@ namespace ShoppingProject.Coupon.API.Services
 
             var coupon = coupons.ToArray().First();
 
-            return new CouponDto(
-                Code: coupon.Code,
-                DiscountAmount: coupon.DiscountAmount,
-                MinAmount: coupon.MinAmount);
+            return _mapper.Map<CouponDto>(coupon);
         }
 
         public CouponDto[] GetCoupons()
@@ -42,7 +43,84 @@ namespace ShoppingProject.Coupon.API.Services
                 throw new Exception("There are no coupons");
             }
 
-            return coupons.Select(x => new CouponDto(x.Code, x.DiscountAmount, x.MinAmount)).ToArray();
+            return coupons.Select(x => _mapper.Map<CouponDto>(x)).ToArray();
+        }
+
+        public void UpdateCoupon(Guid id, CouponDto dto)
+        {
+            if (!_dbContext.Coupons.Any(x => x.Id == id))
+            {
+                throw new Exception("Coupon with this Id does not exist.");
+            }
+
+            if (_dbContext.Coupons.Any(x => x.Code == dto.Code && !x.IsArchived && x.Id != id))
+            {
+                throw new Exception("Coupon with the same code is already active.");
+            }
+
+            var coupon = _dbContext.Coupons.FirstOrDefault(x => x.Id == id);
+
+            coupon = _mapper.Map<Database.Entities.Coupon>(coupon); // test it
+
+            _dbContext.Coupons.Update(coupon);
+            _dbContext.SaveChanges();
+        }
+
+        public Guid CreateCoupon(CouponDto dto)
+        {
+            if (_dbContext.Coupons.Any(x => x.Code == dto.Code && !x.IsArchived))
+            {
+                throw new Exception("Coupon with the same code is already active.");
+            }
+
+            var coupon = new Database.Entities.Coupon()
+            {
+                Id = Guid.NewGuid(),
+                Code = dto.Code,
+                DiscountAmount = dto.DiscountAmount,
+                MinAmount = dto.MinAmount,
+                ExpiryDate = dto.ExpiryDate,
+                IsArchived = false
+            };
+
+            _dbContext.Coupons.Add(coupon);
+            _dbContext.SaveChanges();
+
+            return coupon.Id;
+        }
+
+        public void ArchiveCoupon(Guid id)
+        {
+            if(!_dbContext.Coupons.Any(x => x.Id == id))
+            {
+                throw new Exception("Coupon with this Id does not exist.");
+            }
+
+            var coupon = _dbContext.Coupons.FirstOrDefault(x => x.Id == id);
+            coupon!.IsArchived = true;
+
+            _dbContext.Update(coupon);
+            _dbContext.SaveChanges();
+        }
+
+        public void RestoreCoupon(Guid id)
+        {
+            if (!_dbContext.Coupons.Any(x => x.Id == id))
+            {
+                throw new Exception("Coupon with this Id does not exist.");
+            }
+
+            var coupon = _dbContext.Coupons.FirstOrDefault(x => x.Id == id);
+
+            if(_dbContext.Coupons.Any(x => x.Code == coupon!.Code && x.IsArchived))
+            {
+                throw new Exception("Coupon with the same code is already active.");
+            }
+
+            coupon!.IsArchived = false;
+
+            _dbContext.Update(coupon);
+            _dbContext.SaveChanges();
         }
     }
 }

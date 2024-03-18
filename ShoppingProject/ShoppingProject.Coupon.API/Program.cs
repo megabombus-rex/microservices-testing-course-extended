@@ -1,22 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ShoppingProject.Coupon.API.Interfaces;
+using ShoppingProject.Coupon.API.Mappings;
 using ShoppingProject.Coupon.API.Services;
 using ShoppingProject.Coupon.Database.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+ConfigureMapper(builder.Services);
 ConfigureServices(builder.Services);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -56,11 +56,15 @@ void ApplyMigrations<T>(WebApplication? app) where T : DbContext
 
 void ConfigureServices(IServiceCollection services)
 {
-    // add services and stuff
     builder.Services.AddDbContext<CouponDbContext>(option =>
     {
         option.UseSqlServer(builder.Configuration.GetConnectionString("CouponDbContextSql"));
     });
 
     builder.Services.TryAddScoped<ICouponService, CouponService>();
+}
+
+void ConfigureMapper(IServiceCollection services)
+{
+    services.AddAutoMapper(typeof(CouponMappingProfile));
 }

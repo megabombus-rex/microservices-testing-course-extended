@@ -11,10 +11,12 @@ namespace ShoppingProject.Coupon.API.Controllers
     public class CouponController : ControllerBase
     {
         private readonly ICouponService _couponService;
+        private readonly ILogger _logger;
 
-        public CouponController(ICouponService couponService)
+        public CouponController(ICouponService couponService, ILogger logger)
         {
             _couponService = couponService;
+            _logger = logger;
         }
 
         [HttpGet("all")]
@@ -28,6 +30,10 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
             catch (Exception ex)
             {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
                 var response = new ResponseDto(null, false, ex.Message);
                 return BadRequest(response);
             }
@@ -44,6 +50,86 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
             catch (Exception ex)
             {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
+                var response = new ResponseDto(null, false, ex.Message);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("archive/{Id:guid}")]
+        public IActionResult ArchiveCoupon([FromRoute] Guid id)
+        {
+            try
+            {
+                _couponService.ArchiveCoupon(id);
+                return Ok(new ResponseDto(null, true, string.Format("Coupon with id {0} has been archived.", id)));
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
+                var response = new ResponseDto(null, false, ex.Message);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("restore/{Id:guid}")]
+        public IActionResult RestoreCoupon([FromRoute] Guid id)
+        {
+            try
+            {
+                _couponService.RestoreCoupon(id);
+                return Ok(new ResponseDto(null, true, string.Format("Coupon with id {0} has been restored.", id)));
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
+                var response = new ResponseDto(null, false, ex.Message);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult CreateCoupon([FromBody] CouponDto dto)
+        {
+            try
+            {
+                var guid = _couponService.CreateCoupon(dto);
+                return Ok(new ResponseDto(guid, true, string.Format("Coupon with id {0} has been created.", guid)));
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
+                var response = new ResponseDto(null, false, ex.Message);
+                return BadRequest(response);
+            }
+        }
+
+        [HttpPut("update/{Id:guid}")]
+        public IActionResult UpdateCoupon([FromRoute] Guid id, [FromBody] CouponDto dto)
+        {
+            try
+            {
+                _couponService.UpdateCoupon(id, dto);
+                return Ok(new ResponseDto(id, true, string.Format("Coupon with id {0} has been updated.", id)));
+            }
+            catch (Exception ex)
+            {
+                if (_logger.IsEnabled(LogLevel.Error))
+                {
+                    _logger.LogError(ex.Message);
+                }
                 var response = new ResponseDto(null, false, ex.Message);
                 return BadRequest(response);
             }

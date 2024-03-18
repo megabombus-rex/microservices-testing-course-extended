@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingProject.Coupon.Database.Contexts;
 
@@ -11,9 +12,11 @@ using ShoppingProject.Coupon.Database.Contexts;
 namespace ShoppingProject.Coupon.Database.Migrations
 {
     [DbContext(typeof(CouponDbContext))]
-    partial class CouponDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240317201915_AddArchivedProperty")]
+    partial class AddArchivedProperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
