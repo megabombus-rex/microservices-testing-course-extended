@@ -11,9 +11,9 @@ namespace ShoppingProject.Coupon.API.Controllers
     public class CouponController : ControllerBase
     {
         private readonly ICouponService _couponService;
-        private readonly ILogger _logger;
+        private readonly ILogger<CouponController> _logger;
 
-        public CouponController(ICouponService couponService, ILogger logger)
+        public CouponController(ICouponService couponService, ILogger<CouponController> logger)
         {
             _couponService = couponService;
             _logger = logger;
@@ -39,7 +39,7 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
         }
 
-        [HttpGet("{Id:guid}")]
+        [HttpGet("{id:guid}")]
         public IActionResult GetCoupon([FromRoute] Guid id)
         {
             try
@@ -59,7 +59,7 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
         }
 
-        [HttpPut("archive/{Id:guid}")]
+        [HttpPut("archive/{id:guid}")]
         public IActionResult ArchiveCoupon([FromRoute] Guid id)
         {
             try
@@ -78,7 +78,7 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
         }
 
-        [HttpPut("restore/{Id:guid}")]
+        [HttpPut("restore/{id:guid}")]
         public IActionResult RestoreCoupon([FromRoute] Guid id)
         {
             try
@@ -116,7 +116,7 @@ namespace ShoppingProject.Coupon.API.Controllers
             }
         }
 
-        [HttpPut("update/{Id:guid}")]
+        [HttpPut("update/{id:guid}")]
         public IActionResult UpdateCoupon([FromRoute] Guid id, [FromBody] CouponDto dto)
         {
             try
