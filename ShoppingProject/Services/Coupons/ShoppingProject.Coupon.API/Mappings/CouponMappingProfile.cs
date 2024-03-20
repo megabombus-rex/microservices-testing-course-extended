@@ -7,8 +7,8 @@ namespace ShoppingProject.Coupon.API.Mappings
     {
         public CouponMappingProfile()
         {
-            CreateMap<CouponDto, Database.Entities.Coupon>();
-            CreateMap<Database.Entities.Coupon, CouponDto > ();
+            CreateMap<CreateUpdateCouponDto, Database.Entities.Coupon>();
+            CreateMap<Database.Entities.Coupon, GetCouponDto>();
         }
     }
 }

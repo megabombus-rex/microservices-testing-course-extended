@@ -18,7 +18,7 @@ namespace ShoppingProject.Coupon.API.Services
             _mapper = mapper;
         }
 
-        public CouponDto GetById(Guid id)
+        public GetCouponDto GetById(Guid id)
         {
             var coupons = _dbContext.Coupons
                 .Where(x => x.Id == id);
@@ -30,10 +30,10 @@ namespace ShoppingProject.Coupon.API.Services
 
             var coupon = coupons.ToArray().First();
 
-            return _mapper.Map<CouponDto>(coupon);
+            return _mapper.Map<GetCouponDto>(coupon);
         }
 
-        public CouponDto[] GetCoupons()
+        public GetCouponDto[] GetCoupons()
         {
             var coupons = _dbContext
                 .Coupons;
@@ -43,10 +43,10 @@ namespace ShoppingProject.Coupon.API.Services
                 throw new Exception("There are no coupons");
             }
 
-            return coupons.Select(x => _mapper.Map<CouponDto>(x)).ToArray();
+            return coupons.Select(x => _mapper.Map<GetCouponDto>(x)).ToArray();
         }
 
-        public void UpdateCoupon(Guid id, CouponDto dto)
+        public void UpdateCoupon(Guid id, CreateUpdateCouponDto dto)
         {
             if (!_dbContext.Coupons.Any(x => x.Id == id))
             {
@@ -60,13 +60,16 @@ namespace ShoppingProject.Coupon.API.Services
 
             var coupon = _dbContext.Coupons.FirstOrDefault(x => x.Id == id);
 
-            coupon = _mapper.Map<Database.Entities.Coupon>(coupon); // test it
+            coupon!.Code = dto.Code;
+            coupon!.DiscountAmount = dto.DiscountAmount;
+            coupon!.MinAmount = dto.MinAmount;
+            coupon!.ExpiryDate = dto.ExpiryDate;
 
             _dbContext.Coupons.Update(coupon);
             _dbContext.SaveChanges();
         }
 
-        public Guid CreateCoupon(CouponDto dto)
+        public Guid CreateCoupon(CreateUpdateCouponDto dto)
         {
             if (_dbContext.Coupons.Any(x => x.Code == dto.Code && !x.IsArchived))
             {

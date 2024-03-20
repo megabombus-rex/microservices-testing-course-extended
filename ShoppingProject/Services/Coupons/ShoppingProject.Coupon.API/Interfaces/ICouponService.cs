@@ -4,11 +4,11 @@ namespace ShoppingProject.Coupon.API.Interfaces
 {
     public interface ICouponService
     {
-        CouponDto GetById(Guid id);
-        CouponDto[] GetCoupons();
-        Guid CreateCoupon(CouponDto dto);
+        GetCouponDto GetById(Guid id);
+        GetCouponDto[] GetCoupons();
+        Guid CreateCoupon(CreateUpdateCouponDto dto);
         void ArchiveCoupon(Guid id);
         void RestoreCoupon(Guid id);
-        void UpdateCoupon(Guid id, CouponDto dto);
+        void UpdateCoupon(Guid id, CreateUpdateCouponDto dto);
     }
 }

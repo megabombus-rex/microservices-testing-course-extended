@@ -98,7 +98,7 @@ namespace ShoppingProject.Coupon.API.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult CreateCoupon([FromBody] CouponDto dto)
+        public IActionResult CreateCoupon([FromBody] CreateUpdateCouponDto dto)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace ShoppingProject.Coupon.API.Controllers
         }
 
         [HttpPut("update/{id:guid}")]
-        public IActionResult UpdateCoupon([FromRoute] Guid id, [FromBody] CouponDto dto)
+        public IActionResult UpdateCoupon([FromRoute] Guid id, [FromBody] CreateUpdateCouponDto dto)
         {
             try
             {
