@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using ShoppingProject.Coupon.API.Interfaces;
-using ShoppingProject.Coupon.API.Models.Dtos;
 using ShoppingProject.Coupon.Database.Contexts;
-using ShoppingProject.Coupon.Database.Entities;
+using ShoppingProject.Coupon.Models.Dtos;
 
 namespace ShoppingProject.Coupon.API.Services
 {

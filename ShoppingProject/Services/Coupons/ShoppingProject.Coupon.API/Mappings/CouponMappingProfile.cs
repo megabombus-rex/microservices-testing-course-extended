@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ShoppingProject.Coupon.API.Models.Dtos;
+using ShoppingProject.Coupon.Models.Dtos;
 
 namespace ShoppingProject.Coupon.API.Mappings
 {
