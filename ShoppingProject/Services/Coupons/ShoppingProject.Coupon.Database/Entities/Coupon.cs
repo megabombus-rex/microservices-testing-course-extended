@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ShoppingProject.Coupon.Database.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingProject.Coupon.Database.Entities
 {
-    public class Coupon
+    public class Coupon : IArchivable
     {
         [Key]
         public Guid Id { get; set; }
@@ -12,5 +13,6 @@ namespace ShoppingProject.Coupon.Database.Entities
         public double DiscountAmount { get; set; }
         public double MinAmount { get; set; }
         public DateTime ExpiryDate { get; set; }
+        public bool IsArchived { get; set; }
     }
 }
