@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
+﻿using Microsoft.AspNetCore.Mvc;
 using ShoppingProject.Coupon.API.Interfaces;
-using ShoppingProject.Coupon.API.Models.Dtos;
+using ShoppingProject.Coupon.Models.Dtos;
 
 namespace ShoppingProject.Coupon.API.Controllers
 {
